@@ -36,8 +36,7 @@ class Customer(PersonalInfo, TimeStamp):
 
 class Vendor(PersonalInfo):
 
-
-    description = models.CharField(max_length=50)
+    description = models.CharField(max_length=80)
     STATUS_CHOICES = (
         (1, 'Verified'),
         (2, 'Not Verified'))
