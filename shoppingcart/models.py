@@ -8,9 +8,12 @@ from django.utils import timezone
 class PersonalInfo(models.Model):
 
     user = models.OneToOneField(User)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     dob = models.DateField(null=True, blank=True )
     address = models.CharField(max_length=50)
     phone = models.IntegerField(null=True, blank=True)
+    email = models.CharField(max_length=50)
 
     def __str__(self):
         return self.user.username
@@ -30,7 +33,7 @@ class TimeStamp(models.Model):
 class Customer(PersonalInfo, TimeStamp):
 
   #  personal_info = models.ForeignKey(PersonalInfo)
-    cart = models.TextField()
+    cart = models.TextField(blank=True)
   #  time_stamp = models.ForeignKey(TimeStamp)
     STATUS_CHOICES = (
         (1, 'Verified'),
@@ -52,7 +55,7 @@ class Category(TimeStamp):
 
     category_name = models.CharField(max_length=50)
     description = models.CharField(max_length=50)
-    parent = models.ForeignKey('self')
+    parent = models.ForeignKey('self',blank=True, null=True)
     #time_stamp = models.ForeignKey(TimeStamp)
 
 class Product(TimeStamp):
