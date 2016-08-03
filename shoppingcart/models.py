@@ -47,7 +47,7 @@ class Category(TimeStamp):
 
     category_name = models.CharField(max_length=50)
     description = models.CharField(max_length=50)
-    parent = models.ForeignKey('self')
+    parent = models.ForeignKey('self',blank=True, null=True)
 
 class Product(TimeStamp):
 
