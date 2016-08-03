@@ -1,5 +1,4 @@
-# README #
-*SajiloShop
+# SajiloShop #
 
 
 ### What is this repository for? ###
