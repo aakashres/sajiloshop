@@ -8,12 +8,9 @@ from django.utils import timezone
 class PersonalInfo(models.Model):
 
     user = models.OneToOneField(User)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    dob = models.DateTimeField(null=True, blank=True )
+    dob = models.DateField(null=True, blank=True )
     address = models.CharField(max_length=50)
-    phone = models.IntegerField(null=True, blank=True)
-    email = models.CharField(max_length=50)
+    phone = models.CharField(max_length=50,null=True, blank=True)
 
     def __str__(self):
         return self.user.username
@@ -23,18 +20,15 @@ class PersonalInfo(models.Model):
 
 class TimeStamp(models.Model):
 
-  #  timestamp_id = models.AutoField(primary_key=True)
-    created = models.DateTimeField(default= timezone.now)
-    modified = models.DateTimeField(default= timezone.now)
+    created = models.DateTimeField(default= timezone.now,null=True)
+    modified = models.DateTimeField(default= timezone.now,null=True)
 
     class Meta:
         abstract = True
 
 class Customer(PersonalInfo, TimeStamp):
 
-  #  personal_info = models.ForeignKey(PersonalInfo)
     cart = models.TextField()
-  #  time_stamp = models.ForeignKey(TimeStamp)
     STATUS_CHOICES = (
         (1, 'Verified'),
         (2, 'Not Verified'))
@@ -42,8 +36,7 @@ class Customer(PersonalInfo, TimeStamp):
 
 class Vendor(PersonalInfo):
 
- #   personal_info = models.OneToOneField('shoppingcart.PersonalInfo')
- #   time_stamp = models.ForeignKey(TimeStamp)
+
     description = models.CharField(max_length=50)
     STATUS_CHOICES = (
         (1, 'Verified'),
@@ -56,7 +49,6 @@ class Category(TimeStamp):
     category_name = models.CharField(max_length=50)
     description = models.CharField(max_length=50)
     parent = models.ForeignKey('self')
-    #time_stamp = models.ForeignKey(TimeStamp)
 
 class Product(TimeStamp):
 
@@ -69,17 +61,12 @@ class Product(TimeStamp):
     vendor = models.ForeignKey(Vendor)
     tags = models.TextField()
     category = models.ForeignKey(Category)
-   # time_stamp = models.ForeignKey(TimeStamp)
 
 class Order(TimeStamp):
-
     customer = models.ForeignKey(Customer)
-    #time_stamp = models.ForeignKey(TimeStamp)
 
 class OrderItem(TimeStamp):
-
     order = models.ForeignKey(Order)
     product = models.ForeignKey(Product)
     quantity = models.IntegerField()
     price = models.IntegerField()
-   # time_stamp = models.ForeignKey(TimeStamp)

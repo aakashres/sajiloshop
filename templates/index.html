@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content%}
+    <title>Index Page</title>
+    <div class="container">
+        {% if user.is_authenticated %}
+            Content
+        {% else %}
+            <h1> <a href="/login/"> Login</a> or <a href="/register/"> Register</a> to view the contents</h1>
+        {% endif %}
+
+    </div>
+{% endblock content %}

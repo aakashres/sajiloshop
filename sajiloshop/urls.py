@@ -17,6 +17,10 @@ from django.conf.urls import url
 from django.contrib import admin
 
 urlpatterns = [
+
     url(r'^admin/', admin.site.urls),
     url(r'^register/$', "shoppingcart.views.register"),
+    url(r'^logout/$', "shoppingcart.views.user_logout"),
+    url(r'^$', "shoppingcart.views.index"),
+    url(r'^login/$', "shoppingcart.views.user_login"),
 ]
