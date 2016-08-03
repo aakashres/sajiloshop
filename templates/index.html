@@ -6,7 +6,8 @@
         {% if user.is_authenticated %}
             Content
         {% else %}
-            <h1> <a href="/login/"> Login</a> or <a href="/register/"> Register</a> to view the contents</h1>
+            <h1> <a href="/login/"> Login</a> |
+                <a href="/register/customer"> Register as Customer</a> or  <a href="/register/vendor"> Register as Vendor</a> , to view the contents</h1>
         {% endif %}
 
     </div>
