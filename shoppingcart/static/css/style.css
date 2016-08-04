@@ -1,0 +1,64 @@
+.navbar{
+    border-radius:0px !important;
+    background-color: #1D6010 !important;
+    border: none !important;
+}
+.navbar-brand{
+    color:white !important;
+}
+
+.navbar li a{
+    color:white !important;
+}
+
+.navbar li a:hover , .navbar li a:active{
+    font-weight: bold;
+}
+.forms{
+    width: 40% !important;
+    margin-left: auto;
+    margin-right: auto;
+    border:1px gray groove;
+    padding: 30px;
+    margin-top: 2%;
+    -webkit-box-shadow: 6px 10px 5px 0px rgba(191,185,191,1);
+    -moz-box-shadow: 6px 10px 5px 0px rgba(191,185,191,1);
+    box-shadow: 6px 10px 5px 0px rgba(191,185,191,1);
+}
+
+.btn{
+    width: 40%;
+}
+
+thead{
+    background-color: rgb(233, 233, 233);
+}
+.blogposts{
+    list-style: none;
+    border: 1px gainsboro solid;
+    box-shadow: 6px 5px 1px 0px rgb(239, 239, 239);
+    margin-bottom: 15px;
+
+}
+.toppost{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    clear: both;
+    width: 100%;
+}
+.blogppost{
+    text-align: justify;
+    padding:10px;
+}
+.posts{
+    height: 44px;
+    overflow: hidden;
+}
+
+#like_count{
+    display: inline;
+    clear: both;
+}
+.LikeForm{
+    display: inline;
+}

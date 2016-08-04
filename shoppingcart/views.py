@@ -8,6 +8,9 @@ from django.contrib.auth.models import User
 from shoppingcart.forms import UserForm, CustomerForm, VendorForm
 from django.contrib.auth.decorators import login_required
 
+from shoppingcart.models import Product
+
+
 def customer_register(request):
 
     context = RequestContext(request)
@@ -103,22 +106,13 @@ def user_login(request):
         # blank dictionary object...
         return render_to_response('login.html', {}, context)
 
-
-
 def index(request):
-    # users = User.objects.all()
-    users = User.objects.all()
-    context = {'usersall': users
-               }
-    return render(
-        request,
-        'index.html', context)
+    product = Product.objects.all()
+    context = {'product': product,}
+    return render(request,'index.html', context)
 
 
 @login_required
 def user_logout(request):
-    # Since we know the user is logged in, we can now just log them out.
     logout(request)
-
-    # Take the user back to the homepage.
     return HttpResponseRedirect('/')

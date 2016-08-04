@@ -4,7 +4,17 @@
     <title>Index Page</title>
     <div class="container">
         {% if user.is_authenticated %}
-            Content
+            {% for new in product %}
+                <span>
+                    <h3>{{ new.product_name }}</h3>
+                    <i>{{ new.category }}</i>
+                    <p> {{new.description  }}</p>
+                    <p>{{new.feature  }}</p>
+                    Tags: <i>{{ new.tags }}</i> <br/>
+                    Price: <b><i>Rs.{{ new.price }}</i></b> <br/>
+                    <button class="btn btn-success">Add to cart</button>
+                </span>
+            {% endfor %}
         {% else %}
             <h1> <a href="/login/"> Login</a> |
                 <a href="/register/customer"> Register as Customer</a> or  <a href="/register/vendor"> Register as Vendor</a> , to view the contents</h1>

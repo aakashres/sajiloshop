@@ -34,6 +34,9 @@ class Customer(PersonalInfo, TimeStamp):
         (2, 'Not Verified'))
     status = models.IntegerField( choices = STATUS_CHOICES, default= 0 )
 
+    def __str__(self):
+        return self.user.username
+
 class Vendor(PersonalInfo):
 
     description = models.CharField(max_length=80)
@@ -47,7 +50,11 @@ class Category(TimeStamp):
 
     category_name = models.CharField(max_length=50)
     description = models.CharField(max_length=50)
-    parent = models.ForeignKey('self')
+    parent = models.ForeignKey('self' , null=True,blank=True)
+
+    def __str__(self):
+        return self.category_name
+
 
 class Product(TimeStamp):
 
@@ -60,6 +67,9 @@ class Product(TimeStamp):
     vendor = models.ForeignKey(Vendor)
     tags = models.TextField()
     category = models.ForeignKey(Category)
+
+    def __str__(self):
+        return self.product_name
 
 class Order(TimeStamp):
     customer = models.ForeignKey(Customer)
