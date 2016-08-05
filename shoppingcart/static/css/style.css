@@ -3,6 +3,8 @@
     background-color: #1D6010 !important;
     border: none !important;
 }
+
+
 .navbar-brand{
     color:white !important;
 }
@@ -33,32 +35,4 @@
 thead{
     background-color: rgb(233, 233, 233);
 }
-.blogposts{
-    list-style: none;
-    border: 1px gainsboro solid;
-    box-shadow: 6px 5px 1px 0px rgb(239, 239, 239);
-    margin-bottom: 15px;
-
-}
-.toppost{
-    margin-top: 10px;
-    margin-bottom: 10px;
-    clear: both;
-    width: 100%;
-}
-.blogppost{
-    text-align: justify;
-    padding:10px;
-}
-.posts{
-    height: 44px;
-    overflow: hidden;
-}
-
-#like_count{
-    display: inline;
-    clear: both;
-}
-.LikeForm{
-    display: inline;
 }
