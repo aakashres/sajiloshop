@@ -13,7 +13,7 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'password','first_name','last_name')
+        fields = ('username', 'password','first_name','last_name','email')
 
 
 class CustomerForm(forms.ModelForm):
@@ -21,19 +21,18 @@ class CustomerForm(forms.ModelForm):
     dob= forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
     address= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     phone= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    email= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = Customer
-        fields = ('dob','address','phone','email',)
+        fields = ('dob','address','phone')
 
 class VendorForm(forms.ModelForm):
 
     dob= forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control'}))
     address= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     phone= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    email= forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+
     description = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     class Meta:
         model = Vendor
-        fields = ('dob','address','phone','email','description')
+        fields = ('dob','address','phone','description')

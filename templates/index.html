@@ -4,17 +4,26 @@
     <title>Index Page</title>
     <div class="container">
         {% if user.is_authenticated %}
-            {% for new in product %}
-                <span>
-                    <h3>{{ new.product_name }}</h3>
-                    <i>{{ new.category }}</i>
-                    <p> {{new.description  }}</p>
-                    <p>{{new.feature  }}</p>
-                    Tags: <i>{{ new.tags }}</i> <br/>
-                    Price: <b><i>Rs.{{ new.price }}</i></b> <br/>
-                    <button class="btn btn-success">Add to cart</button>
-                </span>
-            {% endfor %}
+            <div class="col-md-2 pull-left">
+                <h3>Links</h3>
+                <li><a href="/update/{{ user.pk }}">Update your Profile</a></li>
+                <li><a href="/user/{{ user.pk }}">Your dashboard</a></li>
+            </div>
+            <div class="col-md-10">
+                <h3 class="text-center">Latest Products</h3>
+                {% for new in product %}
+                    <span class="col-md-4">
+                        <h3>{{ new.product_name }}</h3>
+                        In <i>{{ new.category }}</i> <br/>
+                        <img class=" " src="../static/images/no.jpg" height="160px"/> <br/>
+                        Tags: <i><b>{{ new.tags }}</b></i> <br/>
+                        Price: <b><i>Rs.{{ new.price }}</i></b> <br/>
+                        <button class="btn btn-success">Add to cart</button>
+                    </span>
+                {% endfor %}
+            </div>
+
+
         {% else %}
             <h1> <a href="/login/"> Login</a> |
                 <a href="/register/customer"> Register as Customer</a> or  <a href="/register/vendor"> Register as Vendor</a> , to view the contents</h1>

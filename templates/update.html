@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <title>Update the user details</title>
+    <div class="container">
+    <div class="forms">
+        <h1 class="text-center">Update information</h1>
+
+        {% if updated %}
+         <strong>Your data has been updated!</strong>
+        <a href="/">Return to the homepage.</a><br />
+        {% else %}
+         <p class="text-center"><br/>Fill the form below to update:</p><br />
+
+        <form id="user_form" method="post" action=""
+                enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            {{ user_form.as_p }}
+            {{ profile_form.as_p }}
+
+            <input class="btn btn-primary" type="submit" name="submit" value="Update" />
+        </form>
+        {% endif %}
+    </div>
+    </div>
+{% endblock content %}

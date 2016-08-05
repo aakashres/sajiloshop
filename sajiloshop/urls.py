@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^logout/$', "shoppingcart.views.user_logout"),
     url(r'^$', "shoppingcart.views.index"),
     url(r'^login/$', "shoppingcart.views.user_login"),
+    url(r'^update/(?P<pk>[\d]+)$', "shoppingcart.views.update"),
 ]

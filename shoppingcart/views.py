@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from shoppingcart.forms import UserForm, CustomerForm, VendorForm
 from django.contrib.auth.decorators import login_required
 
-from shoppingcart.models import Product
+from shoppingcart.models import Product, Customer, Vendor, PersonalInfo
 
 
 def customer_register(request):
@@ -106,13 +106,56 @@ def user_login(request):
         # blank dictionary object...
         return render_to_response('login.html', {}, context)
 
+
 def index(request):
     product = Product.objects.all()
-    context = {'product': product,}
+    context = {'product': product}
     return render(request,'index.html', context)
-
 
 @login_required
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/')
+
+def update(request, pk=None):
+    user = User.objects.get(pk=pk)
+    user_form = UserForm(instance=user)
+    customer = Customer.objects.filter(user = user)
+    vendor = Vendor.objects.filter(user = user)
+    updated = False
+
+    if customer:
+        profile_form = CustomerForm(instance=user.customer)
+
+        if request.method == 'POST':
+            user_form = UserForm(data=request.POST, instance=user)
+            profile_form = CustomerForm(data=request.POST, instance=user.customer)
+
+            if user_form.is_valid() and profile_form.is_valid():
+                user = user_form.save()
+                user.set_password(user.password)
+                user.save()
+                profile = profile_form.save(commit=False)
+                profile.user = user
+                profile.save()
+                updated = True
+
+    else:
+        profile_form = VendorForm(instance=user.vendor)
+
+        if request.method == 'POST':
+            user_form = UserForm(data=request.POST, instance=user)
+            profile_form = VendorForm(data=request.POST, instance=user.vendor)
+
+            if user_form.is_valid() and profile_form.is_valid():
+                user = user_form.save()
+                user.set_password(user.password)
+                user.save()
+                profile = profile_form.save(commit=False)
+                profile.user = user
+                profile.save()
+                updated = True
+
+    context = {'user_form': user_form, 'profile_form': profile_form,'updated':updated}
+    return render(request, 'update.html', context)
+
