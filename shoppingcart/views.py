@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from shoppingcart.forms import UserForm, CustomerForm, VendorForm
 from django.contrib.auth.decorators import login_required
 
-from shoppingcart.models import Product, Customer, Vendor, PersonalInfo
+from shoppingcart.models import Product, Customer, Vendor, PersonalInfo, Order, OrderItem
 
 
 def customer_register(request):
@@ -90,7 +90,11 @@ def user_login(request):
                 # If the account is valid and active, we can log the user in.
                 # We'll send the user back to the homepage.
                 login(request, user)
-                return HttpResponseRedirect('/')
+                customer = Customer.objects.filter(user = user)
+                if customer:
+                    return HttpResponseRedirect('/')
+                else:
+                    return HttpResponseRedirect('/dashboard')
             else:
 
                 return HttpResponse("Login Again")
@@ -158,4 +162,26 @@ def update(request, pk=None):
 
     context = {'user_form': user_form, 'profile_form': profile_form,'updated':updated}
     return render(request, 'update.html', context)
+
+class DashboardView(TemplateView):
+    template_name = "dashboard.html"
+
+    def get(self, request):
+        user = self.request.user
+        customer1 = Customer.objects.filter(user = user)
+        vendor = Vendor.objects.filter(user = user)
+
+        if customer1:
+            customerYes = True
+            order1 = OrderItem.objects.filter(order=Order.objects.filter(customer = customer1))
+            context = {'data': customer1 , 'order':order1, 'customer':customerYes}
+            return render(request,'dashboard.html',context)
+
+        else:
+            customerYes = False
+            context = {'data':vendor,'customer':customerYes}
+            return render(request,'dashboard.html',context)
+
+
+
 

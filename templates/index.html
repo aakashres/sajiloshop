@@ -7,13 +7,13 @@
             <div class="col-md-2 pull-left">
                 <h3>Links</h3>
                 <li><a href="/update/{{ user.pk }}">Update your Profile</a></li>
-                <li><a href="/user/{{ user.pk }}">Your dashboard</a></li>
+                <li><a href="/dashboard/">Your dashboard</a></li>
             </div>
             <div class="col-md-10">
                 <h3 class="text-center">Latest Products</h3>
                 {% for new in product %}
                     <span class="col-md-4">
-                        <h3>{{ new.product_name }}</h3>
+                        <h4>{{ new.product_name }}</h4>
                         In <i>{{ new.category }}</i> <br/>
                         <img class=" " src="../static/images/no.jpg" height="160px"/> <br/>
                         Tags: <i><b>{{ new.tags }}</b></i> <br/>

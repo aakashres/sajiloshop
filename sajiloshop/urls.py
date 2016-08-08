@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-
+from shoppingcart.views import DashboardView
 urlpatterns = [
 
     url(r'^admin/', admin.site.urls),
@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^$', "shoppingcart.views.index"),
     url(r'^login/$', "shoppingcart.views.user_login"),
     url(r'^update/(?P<pk>[\d]+)$', "shoppingcart.views.update"),
+    url(r'^dashboard/$',DashboardView.as_view()),
 ]

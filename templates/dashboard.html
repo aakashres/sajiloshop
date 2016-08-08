@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content%}
+    <title>Dashboard Page</title>
+        <div class="container-fluid">
+            <div class="col-md-2 pull-left">
+                <h4>Links</h4>
+                <ul>
+                    {% if not customer %}<li><a href="/newproduct/">Add a new Product</a> </li>{% endif %}
+                </ul>
+            </div>
+
+            <div class="col-md-10">
+                {% for new in data %}<h3> Welcome <i>{{ new.user.first_name}} </i>,</h3>{% endfor %}
+                <h3 class="text-center">{% if customer %}Your orders{% else %} Orders Ready to shipment {% endif %}</h3>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                      <tr>
+                          <th>Order # </th>
+                          <th>Product</th>
+                         {% if not customer %} <th>Customer</th>{% endif %}
+                          <th>Date</th>
+                          <th>Price</th>
+
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for new in order %}
+                          <tr>
+                            <td><a href="/order/{{ new.pk }}">#{{ new.order_id }}</a> </td>
+                            <td>{{ new.product }}</td>
+                              {% if not customer %} <th>{{ order.customer }}</th>{% endif %}
+                            <td>{{ new.created }}</td>
+                            <td>Rs.{{ new.price }}</td>
+                          </tr>
+                        {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+
+            </div>
+
+
+{% endblock content %}
