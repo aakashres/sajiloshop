@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from shoppingcart.forms import UserForm, CustomerForm, VendorForm
 from django.contrib.auth.decorators import login_required
 
-from shoppingcart.models import Product, Customer, Vendor, PersonalInfo, Order, OrderItem
+from shoppingcart.models import Product, Customer, Vendor, PersonalInfo, Order, OrderItem, Category
 
 
 def customer_register(request):
@@ -112,7 +112,7 @@ def user_login(request):
 
 
 def index(request):
-    product = Product.objects.all()
+    product = Product.objects.all().order_by('-created')
     context = {'product': product}
     return render(request,'index.html', context)
 
@@ -179,8 +179,45 @@ class DashboardView(TemplateView):
 
         else:
             customerYes = False
-            context = {'data':vendor,'customer':customerYes}
+            products = Product.objects.filter(vendor=vendor).order_by('-created')
+            context = {'data':vendor,'customer':customerYes , 'products':products}
             return render(request,'dashboard.html',context)
+
+
+class AddProductView(TemplateView):
+    template_name = "addproduct.html"
+    model = Product
+
+    def post(self,request):
+        added = False
+        product_name = request.POST['product_name']
+        product = Product(product_name= product_name)
+        product.description = request.POST['description']
+        product.price = request.POST['price']
+        product.discount = request.POST['discount']
+        product.stock = request.POST['stock']
+        product.feature = request.POST['feature']
+        product.tags = request.POST['tags']
+
+        category= request.POST['category']
+        checkCategory = Category.objects.get(category_name = category)
+        if checkCategory:
+            product.category = checkCategory
+
+        vendor = Vendor.objects.get(user = request.user)
+        if vendor:
+            product.vendor = vendor
+
+        product.save()
+        added = True
+        return render_to_response('addproduct.html',{'added':added})
+
+    def get(self, request):
+        category = Category.objects.all()
+        return render(request,'addproduct.html',{'category':category})
+
+
+
 
 
 

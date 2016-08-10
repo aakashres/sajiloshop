@@ -4,10 +4,14 @@
     <title>Dashboard Page</title>
         <div class="container-fluid">
             <div class="col-md-2 pull-left">
-                <h4>Links</h4>
-                <ul>
-                    {% if not customer %}<li><a href="/newproduct/">Add a new Product</a> </li>{% endif %}
-                </ul>
+                <h3>Links</h3>
+                {% if not customer %}<li><a href="/newproduct/">Add a new Product</a> </li>
+                    <h3>Your products</h3>
+                   {% for product in products %}
+                       <li><a href="#" >{{product.product_name}}</a></li>
+                   {% endfor%}
+                {% endif %}
+
             </div>
 
             <div class="col-md-10">
@@ -37,6 +41,8 @@
                         {% endfor %}
                     </tbody>
             </table>
+
+
         </div>
 
             </div>

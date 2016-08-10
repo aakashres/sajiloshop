@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <title>Add a new product</title>
+    <div class="container">
+    <div class="forms">
+        <h1 class="text-center">Add a new product</h1>
+
+        {% if added %}
+         <strong>Product has been added!</strong>
+        <a href="/">Return to the homepage.</a><br />
+        {% else %}
+         <p class="text-center"><br/>Fill the form to add a new product:</p><br />
+
+        <form id="user_form" method="post" action=""
+                enctype="multipart/form-data">
+
+            {% csrf_token %}
+            Product Name: <input class="form-control" type="text"  name="product_name" />
+            Product Description: <textarea class="form-control" type="text"  name="description"></textarea>
+            Price:<input class="form-control" type="text"  name="price" />
+            Discount: <input class="form-control" type="text" name="discount" />
+            Stock:<input class="form-control" type="text"  name="stock" />
+            Features:<textarea class="form-control" type="text" name="feature" ></textarea>
+            Tags:<input class="form-control" type="text" name="tags" />
+            Category: <select class="form-control" placeholder="Select" name="category">
+                <option default>Select the category</option>
+                {% for new in category %}
+                     <option value="{{ new.category_name }}">{{ new.category_name }}</option>
+                {% endfor %}
+             <select/>
+
+            <input class="btn btn-primary" type="submit" name="submit" value="Add" />
+        </form>
+        {% endif %}
+    </div>
+    </div>
+{% endblock content %}

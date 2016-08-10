@@ -14,10 +14,11 @@
                 {% for new in product %}
                     <span class="col-md-4">
                         <h4>{{ new.product_name }}</h4>
-                        In <i>{{ new.category }}</i> <br/>
-                        <img class=" " src="../static/images/no.jpg" height="160px"/> <br/>
+                        In <a href="#"> <i>{{ new.category }}</i> </a><br/>
+                        <img class=" " src="../static/images/no.png" height="160px"/> <br/>
                         Tags: <i><b>{{ new.tags }}</b></i> <br/>
                         Price: <b><i>Rs.{{ new.price }}</i></b> <br/>
+                        Seller : <a href="#">{{ new.vendor }}</a> <br/>
                         <button class="btn btn-success">Add to cart</button>
                     </span>
                 {% endfor %}
