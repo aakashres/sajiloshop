@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <title>{{ product.product_name }}</title>
+    <div class="container">
+        <h2>{{ product.product_name }}</h2>
+        <h4><b>Rs.{{ product.price }}</b></h4>
+        Seller : <a href="#">{{ product.vendor }}</a> <br/>
+        In <a href="#"> <i>{{ product.category }}</i> </a><br/>
+        <img class=" " src="../static/images/no.png" width="180px"/> <br/>
+        <p>{{ product.description }}</p>
+        <p>{{ product.feature }}</p>
+        Tags: <i><b>{{ product.tags }}</b></i> <br/>
+    </div>
+
+{% endblock content %}

@@ -8,12 +8,11 @@
 
         {% if added %}
          <strong>Product has been added!</strong>
-        <a href="/">Return to the homepage.</a><br />
+        <a href="/">Click to see the listed products.</a><br />
         {% else %}
          <p class="text-center"><br/>Fill the form to add a new product:</p><br />
 
-        <form id="user_form" method="post" action=""
-                enctype="multipart/form-data">
+        <form id="user_form" method="post" action="">
 
             {% csrf_token %}
             Product Name: <input class="form-control" type="text"  name="product_name" />
@@ -28,7 +27,7 @@
                 {% for new in category %}
                      <option value="{{ new.category_name }}">{{ new.category_name }}</option>
                 {% endfor %}
-             <select/>
+             </select>
 
             <input class="btn btn-primary" type="submit" name="submit" value="Add" />
         </form>

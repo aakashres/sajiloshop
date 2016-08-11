@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from shoppingcart.views import DashboardView, AddProductView
+from shoppingcart.views import DashboardView, AddProductView, ProductView
 
 urlpatterns = [
 
@@ -28,4 +28,5 @@ urlpatterns = [
     url(r'^update/(?P<pk>[\d]+)$', "shoppingcart.views.update"),
     url(r'^dashboard/$',DashboardView.as_view()),
     url(r'^newproduct/$',AddProductView.as_view()),
+    url(r'^product/(?P<pk>[\d]+)$',ProductView.as_view()),
 ]

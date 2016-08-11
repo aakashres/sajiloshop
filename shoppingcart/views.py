@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 # Create your views here.
@@ -121,8 +122,10 @@ def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/')
 
+@login_required
 def update(request, pk=None):
-    user = User.objects.get(pk=pk)
+    user = request.user
+
     user_form = UserForm(instance=user)
     customer = Customer.objects.filter(user = user)
     vendor = Vendor.objects.filter(user = user)
@@ -163,7 +166,7 @@ def update(request, pk=None):
     context = {'user_form': user_form, 'profile_form': profile_form,'updated':updated}
     return render(request, 'update.html', context)
 
-class DashboardView(TemplateView):
+class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "dashboard.html"
 
     def get(self, request):
@@ -184,12 +187,16 @@ class DashboardView(TemplateView):
             return render(request,'dashboard.html',context)
 
 
-class AddProductView(TemplateView):
+class AddProductView(LoginRequiredMixin,TemplateView):
     template_name = "addproduct.html"
     model = Product
+    added = False
+
+    def get(self, request):
+        category = Category.objects.all()
+        return render(request,'addproduct.html',{'category':category})
 
     def post(self,request):
-        added = False
         product_name = request.POST['product_name']
         product = Product(product_name= product_name)
         product.description = request.POST['description']
@@ -210,15 +217,12 @@ class AddProductView(TemplateView):
 
         product.save()
         added = True
-        return render_to_response('addproduct.html',{'added':added})
+        return render(request,'addproduct.html',{'added':added})
 
-    def get(self, request):
-        category = Category.objects.all()
-        return render(request,'addproduct.html',{'category':category})
+class ProductView(TemplateView):
+    template_name = 'product.html'
 
-
-
-
-
-
-
+    def get(self, request,pk):
+        product = Product.objects.get(pk =pk)
+        context ={'product':product}
+        return render(request,'product.html',context)

@@ -3,32 +3,35 @@
 {% block content%}
     <title>Index Page</title>
     <div class="container">
-        {% if user.is_authenticated %}
+
             <div class="col-md-2 pull-left">
                 <h3>Links</h3>
-                <li><a href="/update/{{ user.pk }}">Update your Profile</a></li>
-                <li><a href="/dashboard/">Your dashboard</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="/update/{{ user.pk }}">Update your Profile</a></li>
+                    <li><a href="/dashboard/">Your dashboard</a></li>
+                {% else %}
+                    <li><a href="/login/">Login</a></li>
+                    <li><a href="/register/customer/">Register as Customer</a></li>
+                    <li><a href="/register/vendor/">Register as Vendor</a></li>
+                {% endif %}
             </div>
-            <div class="col-md-10">
+
+
+
+         <div class="col-md-10">
                 <h3 class="text-center">Latest Products</h3>
                 {% for new in product %}
-                    <span class="col-md-4">
-                        <h4>{{ new.product_name }}</h4>
+                    <div class="product">
+                        <a href="product/{{ new.pk }}"> <h4>{{ new.product_name }}</h4></a>
                         In <a href="#"> <i>{{ new.category }}</i> </a><br/>
-                        <img class=" " src="../static/images/no.png" height="160px"/> <br/>
+                        <a href="product/{{ new.pk }}"><img class=" " src="../static/images/no.png" width="180px"/> <br/></a>
                         Tags: <i><b>{{ new.tags }}</b></i> <br/>
-                        Price: <b><i>Rs.{{ new.price }}</i></b> <br/>
+                       <h4><b>Rs.{{ new.price }}</b></h4>
                         Seller : <a href="#">{{ new.vendor }}</a> <br/>
-                        <button class="btn btn-success">Add to cart</button>
-                    </span>
+
+                    </div>
                 {% endfor %}
             </div>
-
-
-        {% else %}
-            <h1> <a href="/login/"> Login</a> |
-                <a href="/register/customer"> Register as Customer</a> or  <a href="/register/vendor"> Register as Vendor</a> , to view the contents</h1>
-        {% endif %}
 
     </div>
 {% endblock content %}
