@@ -3,14 +3,33 @@
 {% block content %}
     <title>{{ product.product_name }}</title>
     <div class="container">
-        <h2>{{ product.product_name }}</h2>
-        <h4><b>Rs.{{ product.price }}</b></h4>
-        Seller : <a href="#">{{ product.vendor }}</a> <br/>
-        In <a href="#"> <i>{{ product.category }}</i> </a><br/>
-        <img class=" " src="../static/images/no.png" width="180px"/> <br/>
-        <p>{{ product.description }}</p>
-        <p>{{ product.feature }}</p>
-        Tags: <i><b>{{ product.tags }}</b></i> <br/>
+    <div class="col-md-5 pull-left">
+        <img class=" " src="../static/images/no.png" width="400px"/> <br/>
     </div>
 
+    <div class="col-md-7 pull-right">
+        <h2>{{ product.product_name }}</h2>
+        <h3><b>Rs.{{ product.price }}</b></h3>
+        In <a href="#"> <i>{{ product.category }}</i> </a><br/>
+        Seller : <a href="#">{{ product.vendor }}</a> <br/>
+
+        <form id="cart_form" method="post" action="">
+            {% csrf_token %}
+            Quantity:<input class="form-control" type="text" value="1"> <br/>
+            Price: <select class="form-control">
+                        <option value="{{ product.price }}">Product variations (Rs.{{product.price }})</option>
+            </select> <br/>
+            <input class="btn btn-info" type="button" value="Add to cart"/>
+        </form>
+
+        <h4>Product Description:</h4>
+        <p>{{ product.description }}</p>
+
+        <h4>Features:</h4>
+        <p>{{ product.feature }}</p>
+        Tags: <i><b>{{ product.tags }}</b></i> <br/>
+
+    </div>
+
+    </div>
 {% endblock content %}

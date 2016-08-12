@@ -122,7 +122,7 @@ def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/')
 
-@login_required
+@login_required(login_url='/login/')
 def update(request, pk=None):
     user = request.user
 
@@ -168,7 +168,7 @@ def update(request, pk=None):
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "dashboard.html"
-
+    login_url = '/login/'
     def get(self, request):
         user = self.request.user
         customer1 = Customer.objects.filter(user = user)
