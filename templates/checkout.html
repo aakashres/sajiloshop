@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <title>Checkout</title>
+    <div class="container">
+        {% if NoCart %}
+            <h4>Add items to cart first , Check out products <a href="/"> here</a></h4>
+        {% else %}
+            {% if added %}
+                <strong>Order has been placed</strong>
+                <a href="/dashboard/">Click to see your dashboard.</a><br />
+            {% else %}
+                <h3>Shipping details</h3>
+                {{ customer.user.first_name }} {{ customer.user.last_name }} <br/>
+                {{ customer.address }}<br/>
+                {{ customer.phone }} <br/>
+
+                <h3>Shipping Method</h3>
+                <i>Cash on delivery , Delivery charges applied</i> <br/>
+                <form id="cart_form" method="post" action="">
+                {% csrf_token %}
+
+                <input class="btn btn-info" type="submit" value="Add to cart" name="submit"/>
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
+
+{% endblock content %}

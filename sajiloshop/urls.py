@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from shoppingcart.views import DashboardView, AddProductView, ProductView, AddCategoryView
+from shoppingcart.views import DashboardView, AddProductView, ProductView, CartView, CheckoutView
 
 urlpatterns = [
 
@@ -31,4 +32,7 @@ urlpatterns = [
     url(r'^product/(?P<pk>[\d]+)$',ProductView.as_view()),
     url(r'^newcategory/$',AddCategoryView.as_view()),
 
+    url(r'^product/delete/(?P<pk>[\d]+)$',"shoppingcart.views.productdelete"),
+    url(r'^cart/$',CartView.as_view()),
+    url(r'^checkout/$',CheckoutView.as_view()),
 ]

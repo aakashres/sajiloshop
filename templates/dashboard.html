@@ -12,13 +12,15 @@
 
                 <h3>Your products</h3>
                    {% for product in products %}
-                       <li><a href="#" >{{product.product_name}}</a></li>
+                       <li><a href="/product/{{product.pk}}" >{{product.product_name}}</a>
+                           ( <a href="/product/update/{{ product.pk }}"> Edit </a>| <a href="/product/delete/{{ product.pk }}"> Delete</a> )</li>
+                          </li>
                    {% endfor%}
 
             </div>
 
             <div class="col-md-10">
-                {% for new in data %}<h3> Welcome <i>{{ new.user.first_name}} </i>,</h3>{% endfor %}
+                <h3> Welcome <i>{{ data.user.first_name}} </i>,</h3>
                 <h3 class="text-center">{% if customer %}Your orders{% else %} Orders Ready to shipment {% endif %}</h3>
                 <table class="table table-bordered table-hover">
                     <thead>

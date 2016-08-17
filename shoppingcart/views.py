@@ -173,19 +173,18 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     def get(self, request):
         user = self.request.user
-        customer1 = Customer.objects.filter(user = user)
-        vendor = Vendor.objects.filter(user = user)
-
-        if customer1:
-            customerYes = True
-            order1 = OrderItem.objects.filter(order=Order.objects.filter(customer = customer1))
-            context = {'data': customer1 , 'order':order1, 'customer':customerYes}
+        if user.customer:
+            CheckCustomer = True
+            customer1 = Customer.objects.get(user = user)
+            order = OrderItem.objects.filter(order__customer=customer1).order_by(-created)
+            context = {'data': customer1 ,'order':order, 'customer':CheckCustomer}
             return render(request,'dashboard.html',context)
 
         else:
-            customerYes = False
+            CheckCustomer = False
+            vendor = Customer.objects.get(user = user)
             products = Product.objects.filter(vendor=vendor).order_by('-created')
-            context = {'data':vendor,'customer':customerYes , 'products':products}
+            context = {'data':vendor,'customer':CheckCustomer , 'products':products}
             return render(request,'dashboard.html',context)
 
 class AddCategoryView(LoginRequiredMixin,TemplateView):
@@ -219,6 +218,7 @@ class AddProductView(LoginRequiredMixin,TemplateView):
     template_name = "addproduct.html"
     model = Product
     added = False
+    login_url = '/login/'
 
     def get(self, request):
         category = Category.objects.all()
@@ -255,5 +255,61 @@ class ProductView(TemplateView):
         context ={'product':product}
         return render(request,'product.html',context)
 
+    def post(self,request,pk):
+        product = Product.objects.get(pk = pk)
+        quantity = request.POST['quantity']
+
+        request.session['product'] = product.id
+        request.session['quantity'] = quantity
+        request.session['total']= int(product.price) * int(quantity)
+        return HttpResponseRedirect('/cart/')
+
+def productdelete(request, pk=None):
+    product = Product.objects.get(pk=pk)
+    if product.vendor == request.user.vendor:
+        product.delete()
+    return HttpResponseRedirect('/dashboard/')
+
+class CartView(LoginRequiredMixin,TemplateView):
+    template_name = 'cart.html'
+    login_url = '/login/'
+
+    def get(self, request):
+        try:
+            product = Product.objects.get(id=request.session['product'])
+            return render(request,'cart.html', {'product':product,})
+        except KeyError:
+            return render(request,'cart.html', { })
+    def post(self,request):
+            return HttpResponseRedirect('/checkout/')
+
+class CheckoutView(LoginRequiredMixin,TemplateView):
+    template_name = 'checkout.html'
+    login_url = '/login/'
+
+    def get(self, request):
+        added = False
+        try:
+            product = Product.objects.get(id=request.session['product'])
+            customer = Customer.objects.get(user = request.user)
+            context = {'customer':customer}
+        except:
+            context ={'NoCart':True}
+        return render(request,'checkout.html',context)
+
+    def post(self,request):
+        order = Order(customer=request.user.customer)
+        order.save()
+        orderitem = OrderItem(order = order)
+        orderitem.product = Product.objects.get(id=request.session['product'])
+        orderitem.quantity= request.session['quantity']
+        orderitem.price = request.session['total']
+        orderitem.save()
+        del request.session['product']
+        del request.session['quantity']
+        del request.session['total']
+
+        added = True
+        return render(request,'checkout.html',{'added':added})
 
 
