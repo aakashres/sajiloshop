@@ -8,7 +8,7 @@
                 {% if not customer %}
                     <li><a href="/newcategory/">Add a new Category</a> </li>
                     <li><a href="/newproduct/">Add a new Product</a> </li>
-                {% endif %}
+
 
                 <h3>Your products</h3>
                    {% for product in products %}
@@ -16,6 +16,7 @@
                            ( <a href="/product/update/{{ product.pk }}"> Edit </a>| <a href="/product/delete/{{ product.pk }}"> Delete</a> )</li>
                           </li>
                    {% endfor%}
+            {% endif %}
 
             </div>
 

@@ -176,7 +176,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         if user.customer:
             CheckCustomer = True
             customer1 = Customer.objects.get(user = user)
-            order = OrderItem.objects.filter(order__customer=customer1).order_by(-created)
+            order = OrderItem.objects.filter(order__customer=customer1).order_by('-created')
             context = {'data': customer1 ,'order':order, 'customer':CheckCustomer}
             return render(request,'dashboard.html',context)
 
@@ -311,5 +311,3 @@ class CheckoutView(LoginRequiredMixin,TemplateView):
 
         added = True
         return render(request,'checkout.html',{'added':added})
-
-

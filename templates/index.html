@@ -14,16 +14,12 @@
                     <li><a href="/register/customer/">Register as Customer</a></li>
                     <li><a href="/register/vendor/">Register as Vendor</a></li>
                 {% endif %}
-            </div>
 
-         <div class="col-lg-5">
-             {% for new in category %}
-             <div class="category">
-                <a href="#"> <i>{{ new.category_name }}</i> </a>
-            {% endfor %}
+                <h3>Categories</h3>
+                {% for new in category %}
+                   <li><a href="#"> <i>{{ new.category_name }}</i> </a></li>
+                {% endfor %}
              </div>
-         </div>
-
 
          <div class="col-md-10">
                 <h3 class="text-center">Latest Products</h3>
