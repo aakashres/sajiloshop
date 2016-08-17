@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 # Create your views here.
@@ -114,7 +115,8 @@ def user_login(request):
 
 def index(request):
     product = Product.objects.all().order_by('-created')
-    context = {'product': product}
+    category = Category.objects.all().order_by('-created')
+    context = {'product': product, 'category':category}
     return render(request,'index.html', context)
 
 @login_required
@@ -186,6 +188,32 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             context = {'data':vendor,'customer':customerYes , 'products':products}
             return render(request,'dashboard.html',context)
 
+class AddCategoryView(LoginRequiredMixin,TemplateView):
+    template_name = 'addcategory.html'
+    model = Category
+    added = False
+
+    def get(self, request):
+        category = Category.objects.all()
+        return render(request,'addcategory.html',{'category':category})
+
+    def post(self, request):
+        category_name = request.POST.get('category_name', None)
+        category = Category(category_name= category_name)
+        category.description = request.POST['description']
+        subparent = request.POST.get('self',None)
+
+        try:
+            checkCategory = Category.objects.get(category_name = subparent)
+            if checkCategory:
+                category.parent = checkCategory
+        except Category.DoesNotExist:
+            category.parent = None
+
+        category.save()
+        added = True
+        return render(request,'addcategory.html', {'added':added})
+
 
 class AddProductView(LoginRequiredMixin,TemplateView):
     template_name = "addproduct.html"
@@ -226,3 +254,6 @@ class ProductView(TemplateView):
         product = Product.objects.get(pk =pk)
         context ={'product':product}
         return render(request,'product.html',context)
+
+
+

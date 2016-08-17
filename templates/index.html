@@ -16,6 +16,13 @@
                 {% endif %}
             </div>
 
+         <div class="col-lg-5">
+             {% for new in category %}
+             <div class="category">
+                <a href="#"> <i>{{ new.category_name }}</i> </a>
+            {% endfor %}
+             </div>
+         </div>
 
 
          <div class="col-md-10">

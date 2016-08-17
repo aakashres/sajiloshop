@@ -5,12 +5,15 @@
         <div class="container-fluid">
             <div class="col-md-2 pull-left">
                 <h3>Links</h3>
-                {% if not customer %}<li><a href="/newproduct/">Add a new Product</a> </li>
-                    <h3>Your products</h3>
+                {% if not customer %}
+                    <li><a href="/newcategory/">Add a new Category</a> </li>
+                    <li><a href="/newproduct/">Add a new Product</a> </li>
+                {% endif %}
+
+                <h3>Your products</h3>
                    {% for product in products %}
                        <li><a href="#" >{{product.product_name}}</a></li>
                    {% endfor%}
-                {% endif %}
 
             </div>
 

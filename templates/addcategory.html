@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <title>Add a new category</title>
+    <div class="container">
+    <div class="forms">
+        <h1 class="text-center">Add a new category</h1>
+
+        {% if added %}
+         <strong>New category has been added!</strong>
+        <a href="/">Click to see the categories.</a><br />
+        {% else %}
+         <p class="text-center"><br/>Fill the form to add a new category:</p><br />
+
+        <form id="user_form" method="post" action="">
+
+            {% csrf_token %}
+            Category Name: <input class="form-control" type="text"  name="category_name" />
+            Category Description: <textarea class="form-control" type="text"  name="description"></textarea>
+            Parent Category: <select class="form-control" placeholder="Select" name="category">
+                <option default>Select the parent category</option>
+                {% for new in category %}
+                     <option value="{{ new.category_name }}">{{ new.category_name }}</option>
+                {% endfor %}
+             </select> <br />
+
+            <input class="btn btn-primary" type="submit" name="submit" value="Add" />
+        </form>
+        {% endif %}
+    </div>
+    </div>
+{% endblock content %}
