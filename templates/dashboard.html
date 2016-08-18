@@ -40,7 +40,7 @@
                           <tr>
                             <td><a href="/order/{{ new.pk }}">#{{ new.order_id }}</a> </td>
                             <td>{{ new.product }}</td>
-                              {% if not customer %} <th>{{ order.customer }}</th>{% endif %}
+                              {% if not customer %} <th><a href="#">{{ new.order.customer }}</a></th>{% endif %}
                             <td>{{ new.created }}</td>
                             <td>Rs.{{ new.price }}</td>
                           </tr>

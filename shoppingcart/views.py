@@ -173,18 +173,19 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     def get(self, request):
         user = self.request.user
-        if user.customer:
+        try:
             CheckCustomer = True
             customer1 = Customer.objects.get(user = user)
             order = OrderItem.objects.filter(order__customer=customer1).order_by('-created')
             context = {'data': customer1 ,'order':order, 'customer':CheckCustomer}
             return render(request,'dashboard.html',context)
 
-        else:
+        except ObjectDoesNotExist:
             CheckCustomer = False
-            vendor = Customer.objects.get(user = user)
+            vendor = Vendor.objects.get(user = user)
             products = Product.objects.filter(vendor=vendor).order_by('-created')
-            context = {'data':vendor,'customer':CheckCustomer , 'products':products}
+            order = OrderItem.objects.filter(product__vendor=vendor).order_by('-created')
+            context = {'data':vendor,'customer':CheckCustomer , 'products':products,'order':order}
             return render(request,'dashboard.html',context)
 
 class AddCategoryView(LoginRequiredMixin,TemplateView):
