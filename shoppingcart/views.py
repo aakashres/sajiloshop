@@ -116,7 +116,17 @@ def user_login(request):
 def index(request):
     product = Product.objects.all().order_by('-created')
     category = Category.objects.all().order_by('-created')
-    context = {'product': product, 'category':category}
+    context1 =[]
+
+    for new in category:
+        productlist = Product.objects.filter(category=new)
+        if productlist:
+            list1 = list(productlist)
+            context1.append(list1)
+        else:
+            context1 = []
+
+    context = {'product': product, 'category':category,'productlist':context1}
     return render(request,'index.html', context)
 
 @login_required

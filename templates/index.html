@@ -22,19 +22,42 @@
              </div>
 
          <div class="col-md-10">
+            <div class="row">
                 <h3 class="text-center">Latest Products</h3>
                 {% for new in product %}
                     <div class="product">
                         <a href="product/{{ new.pk }}"> <h4>{{ new.product_name }}</h4></a>
                         In <a href="#"> <i>{{ new.category }}</i> </a><br/>
-                        <a href="product/{{ new.pk }}"><img class=" " src="../static/images/no.png" width="180px"/> <br/></a>
+                        <a href="product/{{ new.pk }}"><img class=" " src="../static/images/no.png" width="150px"/> <br/></a>
                         Tags: <i><b>{{ new.tags }}</b></i> <br/>
                        <h4><b>Rs.{{ new.price }}</b></h4>
                         Seller : <a href="#">{{ new.vendor }}</a> <br/>
-
                     </div>
                 {% endfor %}
             </div>
+
+
+             {% for new1 in productlist %}
+
+                 <div class="row">
+
+                 <h3>All products under {{new1.0.category}}</h3>
+                 {% for new in new1 %}
+
+                     <div class="product">
+                        <a href="product/{{ new.pk }}"> <h4>{{ new.product_name }}</h4></a>
+                        In <a href="#"> <i>{{ new.category }}</i> </a><br/>
+                        <a href="product/{{ new.pk }}"><img class=" " src="../static/images/no.png" width="150px"/> <br/></a>
+                        Tags: <i><b>{{ new.tags }}</b></i> <br/>
+                       <h4><b>Rs.{{ new.price }}</b></h4>
+                        Seller : <a href="#">{{ new.vendor }}</a> <br/>
+                    </div>
+
+                {% endfor %}
+                 </div>
+             {% endfor %}
+
+         </div>
 
     </div>
 {% endblock content %}
