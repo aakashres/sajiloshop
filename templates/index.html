@@ -17,7 +17,7 @@
 
                 <h3>Categories</h3>
                 {% for new in category %}
-                   <li><a href="#"> <i>{{ new.category_name }}</i> </a></li>
+                   <li><a href="category/{{ new.pk }}"> <i>{{ new.category_name }}</i> </a></li>
                 {% endfor %}
              </div>
 

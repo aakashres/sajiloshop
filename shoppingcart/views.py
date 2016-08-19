@@ -224,6 +224,19 @@ class AddCategoryView(LoginRequiredMixin,TemplateView):
         added = True
         return render(request,'addcategory.html', {'added':added})
 
+class CategoryView(TemplateView):
+    template_name = "category.html"
+
+    def get(self, request,pk):
+        category = Category.objects.get(pk = pk)
+        product = Product.objects.filter(category = category)
+        context ={'category':category, 'product':product}
+        return render(request,'category.html',context)
+
+    def post(self,request,pk):
+        category = Category.objects.get(pk = pk)
+        product = Product.objects.filter(category = category)
+        return HttpResponseRedirect('/')
 
 class AddProductView(LoginRequiredMixin,TemplateView):
     template_name = "addproduct.html"
