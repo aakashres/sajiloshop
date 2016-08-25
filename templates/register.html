@@ -2,8 +2,15 @@
 
 {% block content %}
     <title>Register to site</title>
-    <div class="container">
-        <div class="forms">
+
+     <style>
+        body{
+            background-image:url("/../static/images/home.jpg");
+            background-size: cover;
+        }
+    </style>
+    <div class="container" style="...">
+        <div class="forms text center">
         <h1 class="text-center">Register with Sajiloshop</h1>
 
         {% if registered %}
@@ -12,7 +19,7 @@
         {% else %}
          <p class="text-center"><br/>Fill the form below to Register:</p><br />
 
-        <form id="user_form" method="post" action=""
+        <form id="user_form" method="post" action="/register/"
                 enctype="multipart/form-data">
 
             {% csrf_token %}
