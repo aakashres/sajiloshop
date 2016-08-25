@@ -9,10 +9,10 @@ from django.views.generic import TemplateView
 from django.contrib.auth.models import User
 from shoppingcart.forms import UserForm, CustomerForm, VendorForm
 from django.contrib.auth.decorators import login_required
-
+import json
 from shoppingcart.models import Product, Customer, Vendor, PersonalInfo, Order, OrderItem, Category
-
-
+from django.core import serializers
+from django.db.utils import IntegrityError
 def customer_register(request):
 
     context = RequestContext(request)
@@ -230,13 +230,11 @@ class CategoryView(TemplateView):
     def get(self, request,pk):
         category = Category.objects.get(pk = pk)
         product = Product.objects.filter(category = category)
-        context ={'category':category, 'product':product}
+
+        categories = Category.objects.all()
+        context ={'category':category, 'product':product,'categories':categories}
         return render(request,'category.html',context)
 
-    def post(self,request,pk):
-        category = Category.objects.get(pk = pk)
-        product = Product.objects.filter(category = category)
-        return HttpResponseRedirect('/')
 
 class AddProductView(LoginRequiredMixin,TemplateView):
     template_name = "addproduct.html"
@@ -282,11 +280,31 @@ class ProductView(TemplateView):
     def post(self,request,pk):
         product = Product.objects.get(pk = pk)
         quantity = request.POST['quantity']
+        cart_data = [{'product':product.id,'quantity':quantity,'price':int(quantity)*int(product.price),'product_name':product.product_name}]
 
-        request.session['product'] = product.id
-        request.session['quantity'] = quantity
-        request.session['total']= int(product.price) * int(quantity)
-        return HttpResponseRedirect('/cart/')
+        try:
+            customer = Customer.objects.get(user=request.user)
+
+            prev_cart = customer.cart
+
+            if prev_cart:
+                for i, item in enumerate(prev_cart):
+                    if prev_cart[i]['product']== product.id :
+                        change_quantity= int(quantity) + int(prev_cart[i]['quantity'])
+                        prev_cart[i]['quantity']= change_quantity
+                        change_price= int(quantity)*int(product.price) + int(prev_cart[i]['price'])
+                        prev_cart[i]['price']= change_price
+                        cart_data = []
+
+                customer.cart = cart_data.extend(prev_cart)
+
+            customer.cart = cart_data
+            customer.save()
+            return HttpResponseRedirect('/cart/')
+
+        except:
+            vendor = True
+            return render(request,'product.html',{'vendor':vendor,'product':product})
 
 def productdelete(request, pk=None):
     product = Product.objects.get(pk=pk)
@@ -300,10 +318,22 @@ class CartView(LoginRequiredMixin,TemplateView):
 
     def get(self, request):
         try:
-            product = Product.objects.get(id=request.session['product'])
-            return render(request,'cart.html', {'product':product,})
-        except KeyError:
-            return render(request,'cart.html', { })
+            customer = request.user.customer
+            cart_data=customer.cart
+            total = 0
+            count=0
+            noitem = True
+            if cart_data:
+                noitem = False
+                for i, item in enumerate(cart_data):
+                    total = cart_data[i]['price']+total
+                    count = count + 1
+            request.session['cartcount']= count
+            return render(request,'cart.html', {'cart_data':cart_data,'total':total,'noitem':noitem})
+        except:
+            vendor = True
+            return render(request,'cart.html',{'vendor':vendor})
+
     def post(self,request):
             return HttpResponseRedirect('/checkout/')
 
@@ -312,26 +342,31 @@ class CheckoutView(LoginRequiredMixin,TemplateView):
     login_url = '/login/'
 
     def get(self, request):
-        added = False
         try:
-            product = Product.objects.get(id=request.session['product'])
             customer = Customer.objects.get(user = request.user)
             context = {'customer':customer}
+            return render(request,'checkout.html',context)
         except:
-            context ={'NoCart':True}
-        return render(request,'checkout.html',context)
+            vendor = True
+            return render(request,'checkout.html',{'vendor':vendor})
 
     def post(self,request):
         order = Order(customer=request.user.customer)
+        customer = Customer.objects.get(user = request.user)
         order.save()
-        orderitem = OrderItem(order = order)
-        orderitem.product = Product.objects.get(id=request.session['product'])
-        orderitem.quantity= request.session['quantity']
-        orderitem.price = request.session['total']
+        cart_data = customer.cart
+        total = 0
+        for i, item in enumerate(cart_data):
+            orderitem = OrderItem(order = order)
+            orderitem.product = Product.objects.get(id=cart_data[i]['product'])
+            orderitem.quantity= cart_data[i]['quantity']
+            total = cart_data[i]['price']+total
+
+        orderitem.price = total
         orderitem.save()
-        del request.session['product']
-        del request.session['quantity']
-        del request.session['total']
+        del request.session['cartcount']
+        customer.cart =[]
+        customer.save()
 
         added = True
         return render(request,'checkout.html',{'added':added})

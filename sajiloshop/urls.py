@@ -33,6 +33,6 @@ urlpatterns = [
     url(r'^newcategory/$',AddCategoryView.as_view()),
     url(r'^category/(?P<pk>[\d]+)$',CategoryView.as_view()),
     url(r'^product/delete/(?P<pk>[\d]+)$',"shoppingcart.views.productdelete"),
-    url(r'^cart/$',CartView.as_view()),
+    url(r'^cart/$',CartView.as_view() ,name='cart'),
     url(r'^checkout/$',CheckoutView.as_view()),
 ]

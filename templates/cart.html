@@ -3,28 +3,41 @@
 {% block content %}
     <title>Cart</title>
     <div class="container">
-    {% if product %}
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                </tr>
-            </thead>
+        {% if vendor %}
+            <h2>Login as customer account to view the cart</h2>
 
-            <tbody>
-                <tr>
-                    <td><a href="/product/{{ product.pk }}">{{ product.product_name }}</a> </td>
-                    <td>{{ request.session.quantity }}</td>
-                    <td>Rs.{{ product.price }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <h3>Total: <b>Rs.{{ request.session.total }}</b></h3>
-        <a href="/checkout/" class="btn btn-success">Checkout</a>
-    {% else %}
-        <h4>No items in Cart</h4>
+        {% else %}
+
+            {% if noitem %}
+                <h2>No items in the cart. View <a href="/" >products</a></h2>
+
+            {% else %}
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for new in cart_data %}
+
+                        <tr>
+                            <td><a href="/product/{{ new.product }}">{{ new.product_name }}</a> </td>
+                            <td>{{ new.quantity }}</td>
+                            <td>Rs.{{ new.price}}</td>
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+            </table>
+            <h3>Total: <b>Rs.{{ total }}</b></h3>
+            <a href="/checkout/" class="btn btn-success">Checkout</a>
+        {% endif %}
     {% endif %}
     </div>
 

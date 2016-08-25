@@ -10,7 +10,7 @@
     <div class="col-md-7 pull-right">
         <h2>{{ product.product_name }}</h2>
         <h3><b>Rs.{{ product.price }}</b></h3>
-        In <a href="#"> <i>{{ product.category }}</i> </a><br/>
+        In <a href="../category/{{ product.category.id }}"> <i>{{ product.category }}</i> </a><br/>
         Seller : <a href="#">{{ product.vendor }}</a> <br/>
 
         <form id="cart_form" method="post" action="">
@@ -19,6 +19,7 @@
             Price: <select name ="totalprice" class="form-control">
                         <option value="{{ product.price }}">Product variations (Rs.{{product.price }})</option>
             </select> <br/>
+            {% if vendor %} <h3 style="color:red;"> <i>Item cannot be added with vendor account</i></h3>{% endif %}
             <input class="btn btn-info" type="submit" value="Add to cart" name="submit"/>
         </form>
 

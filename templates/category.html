@@ -3,12 +3,20 @@
 {% block content%}
     <title>{{ category.category_name }}</title>
     <div class="container">
+
+        <div class="col-md-2 pull-left">
+                <h3>All Categories</h3>
+                {% for new in categories %}
+                   <li><a href="category/{{ new.pk }}"> <i>{{ new.category_name }}</i> </a></li>
+                {% endfor %}
+        </div>
+
          <div class="col-md-10">
-                <h3 class="text-center">{{ category.category_name }}</h3>
+                <h3 class="text-center">Latest products in  {{ category.category_name }}</h3>
                 {% for new in product %}
                     <div class="product">
                         <a href="/../product/{{ new.pk }}"> <h4>{{ new.product_name }}</h4></a>
-                        In <a href="#"> <i>{{ new.category }}</i> </a><br/>
+                        In <a href="../category/{{ category.id }}"> <i>{{ new.category }}</i> </a><br/>
                         <a href="/../product/{{ new.pk }}"><img class=" " src="../static/images/no.png" width="180px"/> <br/></a>
                         Tags: <i><b>{{ new.tags }}</b></i> <br/>
                        <h4><b>Rs.{{ new.price }}</b></h4>

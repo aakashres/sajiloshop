@@ -27,10 +27,9 @@
                     <thead>
                       <tr>
                           <th>Order # </th>
-                          <th>Product</th>
                          {% if not customer %} <th>Customer</th>{% endif %}
                           <th>Date</th>
-                          <th>Price</th>
+                          <th>Total</th>
 
                       </tr>
                     </thead>
@@ -39,10 +38,9 @@
                         {% for new in order %}
                           <tr>
                             <td><a href="/order/{{ new.order.pk }}">#{{ new.order_id }}</a> </td>
-                            <td>{{ new.product }}</td>
                               {% if not customer %} <th><a href="#">{{ new.order.customer }}</a></th>{% endif %}
                             <td>{{ new.created }}</td>
-                            <td>Rs.{{ new.price }}</td>
+                            <td><b>Rs.{{ new.price }}</b></td>
                           </tr>
                         {% endfor %}
                     </tbody>

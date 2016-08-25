@@ -3,6 +3,9 @@
 {% block content %}
     <title>Checkout</title>
     <div class="container">
+     {% if vendor %}
+            <h2>Login as customer account to checkout</h2>
+    {% else %}
         {% if NoCart %}
             <h4>Add items to cart first , Check out products <a href="/"> here</a></h4>
         {% else %}
@@ -24,6 +27,7 @@
                 </form>
             {% endif %}
         {% endif %}
+    {% endif %}
     </div>
 
 {% endblock content %}

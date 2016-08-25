@@ -27,7 +27,7 @@
                 {% for new in product %}
                     <div class="product">
                         <a href="product/{{ new.pk }}"> <h4>{{ new.product_name }}</h4></a>
-                        In <a href="#"> <i>{{ new.category }}</i> </a><br/>
+                        In <a href="category/{{ new.category.id }}"> <i>{{ new.category }}</i> </a><br/>
                         <a href="product/{{ new.pk }}"><img class=" " src="../static/images/no.png" width="150px"/> <br/></a>
                         Tags: <i><b>{{ new.tags }}</b></i> <br/>
                        <h4><b>Rs.{{ new.price }}</b></h4>
@@ -46,7 +46,7 @@
 
                      <div class="product">
                         <a href="product/{{ new.pk }}"> <h4>{{ new.product_name }}</h4></a>
-                        In <a href="#"> <i>{{ new.category }}</i> </a><br/>
+                        In <a href="category/{{ new.category.id }}"> <i>{{ new.category }}</i> </a><br/>
                         <a href="product/{{ new.pk }}"><img class=" " src="../static/images/no.png" width="150px"/> <br/></a>
                         Tags: <i><b>{{ new.tags }}</b></i> <br/>
                        <h4><b>Rs.{{ new.price }}</b></h4>

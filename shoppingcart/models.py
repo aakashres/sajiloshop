@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from django.contrib.postgres.fields import JSONField
 #import datetime
 
 # Create your models here.
@@ -28,7 +29,7 @@ class TimeStamp(models.Model):
 
 class Customer(PersonalInfo, TimeStamp):
 
-    cart = models.TextField()
+    cart = JSONField(default=list,null=True,blank=True)
     STATUS_CHOICES = (
         (1, 'Verified'),
         (2, 'Not Verified'))
