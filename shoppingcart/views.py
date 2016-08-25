@@ -236,6 +236,7 @@ class CategoryView(TemplateView):
         return render(request,'category.html',context)
 
 
+
 class AddProductView(LoginRequiredMixin,TemplateView):
     template_name = "addproduct.html"
     model = Product
@@ -337,6 +338,24 @@ class CartView(LoginRequiredMixin,TemplateView):
     def post(self,request):
             return HttpResponseRedirect('/checkout/')
 
+class CartItemDeleteView(TemplateView,LoginRequiredMixin):
+    template_name = 'cart.html'
+    login_url = '/login/'
+
+    def get(self, request,pk):
+        customer = Customer.objects.get(user=request.user)
+        prev_cart = customer.cart
+        product = Product.objects.get(id=pk)
+        if prev_cart:
+            for i, item in enumerate(prev_cart):
+                if prev_cart[i]['product']== product.id :
+                    del prev_cart[i]
+
+        customer.cart = prev_cart
+        customer.save()
+        return HttpResponseRedirect('/cart/')
+
+
 class CheckoutView(LoginRequiredMixin,TemplateView):
     template_name = 'checkout.html'
     login_url = '/login/'
@@ -353,17 +372,22 @@ class CheckoutView(LoginRequiredMixin,TemplateView):
     def post(self,request):
         order = Order(customer=request.user.customer)
         customer = Customer.objects.get(user = request.user)
-        order.save()
         cart_data = customer.cart
         total = 0
         for i, item in enumerate(cart_data):
-            orderitem = OrderItem(order = order)
-            orderitem.product = Product.objects.get(id=cart_data[i]['product'])
-            orderitem.quantity= cart_data[i]['quantity']
             total = cart_data[i]['price']+total
 
-        orderitem.price = total
-        orderitem.save()
+        order.total_price = total
+        order.save()
+
+        for i, item in enumerate(cart_data):
+            orderitem = OrderItem(order = order)
+            product = Product.objects.get(id=cart_data[i]['product'])
+            orderitem.product = product
+            orderitem.quantity= cart_data[i]['quantity']
+            orderitem.price = cart_data[i]['price']
+            orderitem.save()
+
         del request.session['cartcount']
         customer.cart =[]
         customer.save()
