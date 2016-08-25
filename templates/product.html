@@ -15,18 +15,18 @@
 
         <form id="cart_form" method="post" action="">
             {% csrf_token %}
-            Quantity:<input class="form-control" type="text" value="1"> <br/>
-            Price: <select class="form-control">
+            Quantity:<input name="quantity" class="form-control" type="text" value="1"> <br/>
+            Price: <select name ="totalprice" class="form-control">
                         <option value="{{ product.price }}">Product variations (Rs.{{product.price }})</option>
             </select> <br/>
-            <input class="btn btn-info" type="button" value="Add to cart"/>
+            <input class="btn btn-info" type="submit" value="Add to cart" name="submit"/>
         </form>
 
         <h4>Product Description:</h4>
-        <p>{{ product.description }}</p>
+        <p>{{ product.description|linebreaks }}</p>
 
         <h4>Features:</h4>
-        <p>{{ product.feature }}</p>
+        <p>{{ product.feature|linebreaks }}</p>
         Tags: <i><b>{{ product.tags }}</b></i> <br/>
 
     </div>

@@ -15,7 +15,7 @@
             <a class="navbar-brand" href="/"><i class="fa fa-home"></i> SajiloShop</a>
             <ul class="navbar-nav nav pull-right">
                 {% if user.is_authenticated %}
-                    <li><a href="" ><span class="glyphicon glyphicon-shopping-cart"></span> Cart</a></li>
+                    <li><a href="/cart/" >{% if request.session.product %}<span>(1)</span> {% endif %}<span class="glyphicon glyphicon-shopping-cart"></span> Cart</a></li>
                     <li><a href="/logout/"><span class="glyphicon glyphicon-log-out"></span> Logout ( {{ user.username }} )</a> </li>
                     {% else %}
                     <li><a href="/login/"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>

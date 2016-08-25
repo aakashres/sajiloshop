@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <title>Cart</title>
+    <div class="container">
+    {% if product %}
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td><a href="/product/{{ product.pk }}">{{ product.product_name }}</a> </td>
+                    <td>{{ request.session.quantity }}</td>
+                    <td>Rs.{{ product.price }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Total: <b>Rs.{{ request.session.total }}</b></h3>
+        <a href="/checkout/" class="btn btn-success">Checkout</a>
+    {% else %}
+        <h4>No items in Cart</h4>
+    {% endif %}
+    </div>
+
+{% endblock content %}

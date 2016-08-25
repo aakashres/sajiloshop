@@ -6,22 +6,22 @@
             <div class="col-md-2 pull-left">
                 <h3>Links</h3>
                 {% if not customer %}
-                    <ul class="nav nav-pills nav-stacked">
-                        <li><a href="/newproduct/">Add a new Product</a> </li>
-                    </ul>
-                <h3>Your products</h3>
+                    <li><a href="/newcategory/">Add a new Category</a> </li>
+                    <li><a href="/newproduct/">Add a new Product</a> </li>
 
-                    {% for product in products %}
-                        <ul class="nav nav-pills nav-stacked">
-                            <li><a href="#" >{{product.product_name}}</a></li>
-                        </ul>
+
+                <h3>Your products</h3>
+                   {% for product in products %}
+                       <li><a href="/product/{{product.pk}}" >{{product.product_name}}</a>
+                           ( <a href="/product/update/{{ product.pk }}"> Edit </a>| <a href="/product/delete/{{ product.pk }}"> Delete</a> )</li>
+                          </li>
                    {% endfor%}
-                {% endif %}
+            {% endif %}
 
             </div>
 
             <div class="col-md-10">
-                {% for new in data %}<h3> Welcome <i>{{ new.user.first_name}} </i>,</h3>{% endfor %}
+                <h3> Welcome <i>{{ data.user.first_name}} </i>,</h3>
                 <h3 class="text-center">{% if customer %}Your orders{% else %} Orders Ready to shipment {% endif %}</h3>
                 <table class="table table-bordered table-hover">
                     <thead>
@@ -38,9 +38,9 @@
                     <tbody>
                         {% for new in order %}
                           <tr>
-                            <td><a href="/order/{{ new.pk }}">#{{ new.order_id }}</a> </td>
+                            <td><a href="/order/{{ new.order.pk }}">#{{ new.order_id }}</a> </td>
                             <td>{{ new.product }}</td>
-                              {% if not customer %} <th>{{ order.customer }}</th>{% endif %}
+                              {% if not customer %} <th><a href="#">{{ new.order.customer }}</a></th>{% endif %}
                             <td>{{ new.created }}</td>
                             <td>Rs.{{ new.price }}</td>
                           </tr>

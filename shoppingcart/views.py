@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 # Create your views here.
@@ -114,7 +115,18 @@ def user_login(request):
 
 def index(request):
     product = Product.objects.all().order_by('-created')
-    context = {'product': product}
+    category = Category.objects.all().order_by('-created')
+    context1 =[]
+
+    for new in category:
+        productlist = Product.objects.filter(category=new)
+        if productlist:
+            list1 = list(productlist)
+            context1.append(list1)
+        else:
+            context1 = []
+
+    context = {'product': product, 'category':category,'productlist':context1}
     return render(request,'index.html', context)
 
 @login_required
@@ -171,26 +183,66 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     def get(self, request):
         user = self.request.user
-        customer1 = Customer.objects.filter(user = user)
-        vendor = Vendor.objects.filter(user = user)
-
-        if customer1:
-            customerYes = True
-            order1 = OrderItem.objects.filter(order=Order.objects.filter(customer = customer1))
-            context = {'data': customer1 , 'order':order1, 'customer':customerYes}
+        try:
+            CheckCustomer = True
+            customer1 = Customer.objects.get(user = user)
+            order = OrderItem.objects.filter(order__customer=customer1).order_by('-created')
+            context = {'data': customer1 ,'order':order, 'customer':CheckCustomer}
             return render(request,'dashboard.html',context)
 
-        else:
-            customerYes = False
+        except ObjectDoesNotExist:
+            CheckCustomer = False
+            vendor = Vendor.objects.get(user = user)
             products = Product.objects.filter(vendor=vendor).order_by('-created')
-            context = {'data':vendor,'customer':customerYes , 'products':products}
+            order = OrderItem.objects.filter(product__vendor=vendor).order_by('-created')
+            context = {'data':vendor,'customer':CheckCustomer , 'products':products,'order':order}
             return render(request,'dashboard.html',context)
 
+class AddCategoryView(LoginRequiredMixin,TemplateView):
+    template_name = 'addcategory.html'
+    model = Category
+    added = False
+
+    def get(self, request):
+        category = Category.objects.all()
+        return render(request,'addcategory.html',{'category':category})
+
+    def post(self, request):
+        category_name = request.POST.get('category_name', None)
+        category = Category(category_name= category_name)
+        category.description = request.POST['description']
+        subparent = request.POST.get('self',None)
+
+        try:
+            checkCategory = Category.objects.get(category_name = subparent)
+            if checkCategory:
+                category.parent = checkCategory
+        except Category.DoesNotExist:
+            category.parent = None
+
+        category.save()
+        added = True
+        return render(request,'addcategory.html', {'added':added})
+
+class CategoryView(TemplateView):
+    template_name = "category.html"
+
+    def get(self, request,pk):
+        category = Category.objects.get(pk = pk)
+        product = Product.objects.filter(category = category)
+        context ={'category':category, 'product':product}
+        return render(request,'category.html',context)
+
+    def post(self,request,pk):
+        category = Category.objects.get(pk = pk)
+        product = Product.objects.filter(category = category)
+        return HttpResponseRedirect('/')
 
 class AddProductView(LoginRequiredMixin,TemplateView):
     template_name = "addproduct.html"
     model = Product
     added = False
+    login_url = '/login/'
 
     def get(self, request):
         category = Category.objects.all()
@@ -226,3 +278,60 @@ class ProductView(TemplateView):
         product = Product.objects.get(pk =pk)
         context ={'product':product}
         return render(request,'product.html',context)
+
+    def post(self,request,pk):
+        product = Product.objects.get(pk = pk)
+        quantity = request.POST['quantity']
+
+        request.session['product'] = product.id
+        request.session['quantity'] = quantity
+        request.session['total']= int(product.price) * int(quantity)
+        return HttpResponseRedirect('/cart/')
+
+def productdelete(request, pk=None):
+    product = Product.objects.get(pk=pk)
+    if product.vendor == request.user.vendor:
+        product.delete()
+    return HttpResponseRedirect('/dashboard/')
+
+class CartView(LoginRequiredMixin,TemplateView):
+    template_name = 'cart.html'
+    login_url = '/login/'
+
+    def get(self, request):
+        try:
+            product = Product.objects.get(id=request.session['product'])
+            return render(request,'cart.html', {'product':product,})
+        except KeyError:
+            return render(request,'cart.html', { })
+    def post(self,request):
+            return HttpResponseRedirect('/checkout/')
+
+class CheckoutView(LoginRequiredMixin,TemplateView):
+    template_name = 'checkout.html'
+    login_url = '/login/'
+
+    def get(self, request):
+        added = False
+        try:
+            product = Product.objects.get(id=request.session['product'])
+            customer = Customer.objects.get(user = request.user)
+            context = {'customer':customer}
+        except:
+            context ={'NoCart':True}
+        return render(request,'checkout.html',context)
+
+    def post(self,request):
+        order = Order(customer=request.user.customer)
+        order.save()
+        orderitem = OrderItem(order = order)
+        orderitem.product = Product.objects.get(id=request.session['product'])
+        orderitem.quantity= request.session['quantity']
+        orderitem.price = request.session['total']
+        orderitem.save()
+        del request.session['product']
+        del request.session['quantity']
+        del request.session['total']
+
+        added = True
+        return render(request,'checkout.html',{'added':added})
