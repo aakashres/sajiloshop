@@ -2,7 +2,14 @@
 
 {% block content%}
     <title>Index Page</title>
+    <div class="w3-content w3-section" style="max-width:500px">
+		  <img class="mySlides" src="/../static/images/Untitled-1.jpg" >
+		  <img class="mySlides" src="/../static/images/Untitled-2.jpg">
+		  <img class="mySlides" src="/../static/images/Untitled-3.jpg">
+		</div>
+
     <div class="container">
+
 
             <div class="col-md-2 pull-left">
                 <h3>Links</h3>
@@ -28,16 +35,24 @@
          <div class="col-md-10">
             <div class="row">
                 <h3 class="text-center">Latest Products</h3>
+                <div id="owl-demo" class="owl-carousel owl-theme">
                 {% for new in product %}
-                    <div class="product">
-                        <a href="product/{{ new.pk }}"> <h4>{{ new.product_name }}</h4></a>
-                        In <a href="category/{{ new.category.id }}"> <i>{{ new.category }}</i> </a><br/>
-                        <a href="product/{{ new.pk }}"><img class=" " src="../static/images/no.png" width="150px"/> <br/></a>
-                        Tags: <i><b>{{ new.tags }}</b></i> <br/>
-                       <h4><b>Rs.{{ new.price }}</b></h4>
-                        Seller : <a href="#">{{ new.vendor }}</a> <br/>
-                    </div>
+
+                        <div class="product">
+                            <a href="product/{{ new.pk }}"> <h4>{{ new.product_name }}</h4></a>
+                            In <a href="category/{{ new.category.id }}"> <i>{{ new.category }}</i> </a><br/>
+                            <a href="product/{{ new.pk }}"><img class=" " src="../static/images/no.png" width="150px"/> <br/></a>
+                            Tags: <i><b>{{ new.tags }}</b></i> <br/>
+                           <h4><b>Rs.{{ new.price }}</b></h4>
+                            Seller : <a href="#">{{ new.vendor }}</a> <br/>
+                        </div>
+
+
                 {% endfor %}
+                </div>
+
+
+
             </div>
 
 
@@ -45,7 +60,8 @@
 
                  <div class="row">
 
-                 <h3>All products under {{new1.0.category}}</h3>
+                 <h3>{{new1.0.category}}</h3>
+
                  {% for new in new1 %}
 
                      <div class="product">
@@ -56,9 +72,9 @@
                        <h4><b>Rs.{{ new.price }}</b></h4>
                         Seller : <a href="#">{{ new.vendor }}</a> <br/>
                     </div>
+                 {% endfor %}
 
-                {% endfor %}
-                 </div>
+             </div>
              {% endfor %}
 
          </div>
