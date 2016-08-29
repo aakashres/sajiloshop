@@ -4,11 +4,13 @@
     <title>{{ category.category_name }}</title>
     <div class="container">
 
-        <div class="col-md-2 pull-left">
+        <div class="col-md-2 pull-left links">
                 <h3>All Categories</h3>
+                <ul>
                 {% for new in categories %}
                    <li><a href="/../category/{{ new.pk }}"> <i>{{ new.category_name }}</i> </a></li>
                 {% endfor %}
+                </ul>
         </div>
 
          <div class="col-md-10">

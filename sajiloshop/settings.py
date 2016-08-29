@@ -80,13 +80,13 @@ WSGI_APPLICATION = 'sajiloshop.wsgi.application'
 
 DATABASES = {
     'default': {
-   'ENGINE': 'django.db.backends.postgresql_psycopg2',
-   'NAME': 'sajiloshopdb',
-   'USER': 'postgres',
-   'PASSWORD': 'admin',
-   'HOST': 'localhost',
-   'PORT': '5432',
-   }
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': 'sajiloshopdb',
+    'USER': 'postgres',
+    'PASSWORD': 'admin',
+    'HOST': 'localhost',
+    'PORT': '5432',
+    }
 }
 
 

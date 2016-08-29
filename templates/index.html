@@ -2,40 +2,32 @@
 
 {% block content%}
     <title>Index Page</title>
-    <div class="w3-content w3-section" style="max-width:500px">
-		  <img class="mySlides" src="/../static/images/Untitled-1.jpg" >
-		  <img class="mySlides" src="/../static/images/Untitled-2.jpg">
-		  <img class="mySlides" src="/../static/images/Untitled-3.jpg">
-		</div>
+
 
     <div class="container">
 
 
             <div class="col-md-2 pull-left">
-                <h3>Links</h3>
-                {% if user.is_authenticated %}
-                    <ul class="nav nav-pills nav-stacked">
-                        <li><a href="/update/{{ user.pk }}">Update your Profile</a></li>
-                        <li><a href="/dashboard/">Your dashboard</a></li>
-                    </ul>
-                {% else %}
-                    <ul class="nav nav-pills nav-stacked">
-                        <li><a href="/login/">Login</a></li>
-                        <li><a href="/register/customer/">Register as Customer</a></li>
-                        <li><a href="/register/vendor/">Register as Vendor</a></li>
-                    </ul>
-                {% endif %}
 
+                <div class="links">
                 <h3>Categories</h3>
+                <ul>
                 {% for new in category %}
                    <li><a href="category/{{ new.pk }}"> <i>{{ new.category_name }}</i> </a></li>
                 {% endfor %}
+                </ul>
+                </div>
              </div>
 
          <div class="col-md-10">
+         <div class="">
+		  <img class="mySlides" src="/../static/images/Untitled-1.jpg" >
+		  <img class="mySlides" src="/../static/images/Untitled-2.jpg">
+		  <img class="mySlides" src="/../static/images/Untitled-3.jpg">
+		</div>
             <div class="row">
                 <h3 class="text-center">Latest Products</h3>
-                <div id="owl-demo" class="owl-carousel owl-theme">
+
                 {% for new in product %}
 
                         <div class="product">
@@ -49,7 +41,7 @@
 
 
                 {% endfor %}
-                </div>
+
 
 
 

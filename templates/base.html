@@ -24,7 +24,17 @@
                     {% if user.customer %}
                         <li><a href="/cart/" >{% if request.session.cartcount %}<span class="cart_count">{{ request.session.cartcount }}</span> {% endif %}<span class="glyphicon glyphicon-shopping-cart"></span> Cart</a></li>
                         {% endif %}
-                        <li><a href="/logout/"><span class="glyphicon glyphicon-log-out"></span> Logout ( <b>{{ user.username }}</b> )</a> </li>
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ user.username }}
+                        <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="/dashboard/">Your Dashboard</a></li>
+                          <li><a href="/update/{{ user.pk }}">Update Your profile</a></li>
+                          <li><a href="/logout/">Logout</a></li>
+                        </ul>
+                    </li>
+
                     {% else %}
                     <li><a href="/login/"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
                     <li><a href="/register/customer"><span class="glyphicon glyphicon-user"></span> Register as Customer</a> </li>

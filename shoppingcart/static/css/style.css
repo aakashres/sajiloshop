@@ -18,15 +18,20 @@
   color: #eb9316 !important;
   background-color: transparent;
 }
-.navbar li a:hover , .navbar li a:active{
-    font-weight: bold;
+.dropdown-menu{
+    left:-30% !important;
+
 }
+
+.dropdown-menu li a{
+    color: black !important;
+  }
 .forms{
 
     width: 40% !important;
     margin-left: auto;
     margin-right: auto;
-    border:1px gray groove;
+    border:1px #bfbcbc groove;
     padding: 30px;
     margin-top: 2%;
     -webkit-box-shadow: 6px 10px 5px 0px rgba(191,185,191,1);
@@ -77,4 +82,24 @@
    padding-left: 2px;
    padding-right: 2px;
    color: white;
+}
+
+.mySlides{
+    width:100%;
+}
+.row{
+    padding-left: 15px;
+}
+.links li{
+    list-style:none;
+    background: black;
+    box-shadow: 4px 1px 4px 1px rgb(239, 239, 239);
+    margin-left: -35px !important;
+    margin-bottom: 4px;
+    width: 103%;
+
+}
+.links li a{
+    color: white;
+    padding: 5px;
 }
