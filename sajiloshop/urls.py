@@ -15,19 +15,18 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from shoppingcart.views import DashboardView, AddProductView, ProductView, AddCategoryView, CategoryView, \
-    CartItemDeleteView
-from shoppingcart.views import DashboardView, AddProductView, ProductView, CartView, CheckoutView
+from shoppingcart.views import DashboardView, AddProductView, ProductView, CartView, CheckoutView,\
+    UpdateView,LogoutView,AddCategoryView, CategoryView,CartItemDeleteView,IndexView,LoginView,CustomerRegisterView,VendorRegisterView
 
 urlpatterns = [
 
     url(r'^admin/', admin.site.urls),
-    url(r'^register/customer/$', "shoppingcart.views.customer_register"),
-    url(r'^register/vendor/$', "shoppingcart.views.vendor_register"),
-    url(r'^logout/$', "shoppingcart.views.user_logout"),
-    url(r'^$', "shoppingcart.views.index"),
-    url(r'^login/$', "shoppingcart.views.user_login"),
-    url(r'^update/(?P<pk>[\d]+)$', "shoppingcart.views.update"),
+    url(r'^register/customer/$',CustomerRegisterView.as_view()),
+    url(r'^register/vendor/$', VendorRegisterView.as_view()),
+    url(r'^logout/$', LogoutView.as_view()),
+    url(r'^$', IndexView.as_view()),
+    url(r'^login/$', LoginView.as_view()),
+    url(r'^update/(?P<pk>[\d]+)$',UpdateView.as_view()),
     url(r'^dashboard/$',DashboardView.as_view()),
     url(r'^newproduct/$',AddProductView.as_view()),
     url(r'^product/(?P<pk>[\d]+)$',ProductView.as_view()),
