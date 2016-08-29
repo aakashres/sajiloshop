@@ -13,170 +13,186 @@ import json
 from shoppingcart.models import Product, Customer, Vendor, PersonalInfo, Order, OrderItem, Category
 from django.core import serializers
 from django.db.utils import IntegrityError
-def customer_register(request):
 
-    context = RequestContext(request)
-    registered = False
+class CustomerRegisterView(TemplateView):
+    template_name = "register.html"
 
-    if request.method == 'POST':
-        user_form = UserForm(data=request.POST)
-        profile_form = CustomerForm(data=request.POST)
-
-        if user_form.is_valid() and profile_form.is_valid():
-            user = user_form.save()
-            user.set_password(user.password)
-            user.save()
-            profile = profile_form.save(commit=False)
-            profile.user = user
-            profile.save()
-            registered = True
-        else:
-            print(user_form.errors, profile_form.errors)
-    else:
+    def get(self,request):
         user_form = UserForm()
         profile_form = CustomerForm()
-    return render_to_response(
-        'register.html',
-        {'user_form': user_form, 'profile_form': profile_form, 'registered': registered},
-        context)
+        return render(request,'register.html',{'user_form': user_form, 'profile_form': profile_form})
 
-def vendor_register(request):
+    def post(self,request):
+        context = RequestContext(request)
+        registered = False
 
-    context = RequestContext(request)
-    registered = False
+        if request.method == 'POST':
+            user_form = UserForm(data=request.POST)
+            profile_form = CustomerForm(data=request.POST)
 
-    if request.method == 'POST':
-        user_form = UserForm(data=request.POST)
-        profile_form = VendorForm(data=request.POST)
-
-        if user_form.is_valid() and profile_form.is_valid():
-            user = user_form.save()
-            user.set_password(user.password)
-            user.save()
-            profile = profile_form.save(commit=False)
-            profile.user = user
-            profile.save()
-            registered = True
+            if user_form.is_valid() and profile_form.is_valid():
+                user = user_form.save()
+                user.set_password(user.password)
+                user.save()
+                profile = profile_form.save(commit=False)
+                profile.user = user
+                profile.save()
+                registered = True
+            else:
+                print(user_form.errors, profile_form.errors)
         else:
-            print(user_form.errors, profile_form.errors)
-    else:
+            user_form = UserForm()
+            profile_form = CustomerForm()
+        return render_to_response(
+            'register.html',
+            {'user_form': user_form, 'profile_form': profile_form, 'registered': registered},
+            context)
+
+class VendorRegisterView(TemplateView):
+    template_name = "register.html"
+
+    def get(self,request):
         user_form = UserForm()
         profile_form = VendorForm()
-    return render_to_response(
-        'register.html',
-        {'user_form': user_form, 'profile_form': profile_form, 'registered': registered},
-        context)
+        return render(request,'register.html',{'user_form': user_form, 'profile_form': profile_form})
 
-def user_login(request):
-    # Like before, obtain the context for the user's request.
-    context = RequestContext(request)
+    def post(self,request):
 
-    # If the request is a HTTP POST, try to pull out the relevant information.
-    if request.method == 'POST':
-        # Gather the username and password provided by the user.
-        # This information is obtained from the login form.
-        username = request.POST['username']
-        password = request.POST['password']
-        remember = request.POST.get('remember')
+        context = RequestContext(request)
+        registered = False
 
-        # Use Django's machinery to attempt to see if the username/password
-        # combination is valid - a User object is returned if it is.
-        user = authenticate(username=username, password=password)
+        if request.method == 'POST':
+            user_form = UserForm(data=request.POST)
+            profile_form = VendorForm(data=request.POST)
 
-        # If we have a User object, the details are correct.
-        # If None (Python's way of representing the absence of a value), no user
-        # with matching credentials was found.
-        if user:
-            # Is the account active? It could have been disabled.
-            if user.is_active:
-                # If the account is valid and active, we can log the user in.
-                # We'll send the user back to the homepage.
-                login(request, user)
-                customer = Customer.objects.filter(user = user)
-                if customer:
-                    return HttpResponseRedirect('/')
-                else:
-                    return HttpResponseRedirect('/dashboard')
+            if user_form.is_valid() and profile_form.is_valid():
+                user = user_form.save()
+                user.set_password(user.password)
+                user.save()
+                profile = profile_form.save(commit=False)
+                profile.user = user
+                profile.save()
+                registered = True
             else:
-
-                return HttpResponse("Login Again")
+                print(user_form.errors, profile_form.errors)
         else:
-            # Bad login details were provided. So we can't log the user in.
-            print("Invalid login details: {0}, {1}".format(username, password))
-            return HttpResponse("Invalid login details supplied.")
+            user_form = UserForm()
+            profile_form = VendorForm()
+        return render_to_response(
+            'register.html',
+            {'user_form': user_form, 'profile_form': profile_form, 'registered': registered},
+            context)
 
-    # The request is not a HTTP POST, so display the login form.
-    # This scenario would most likely be a HTTP GET.
-    else:
-        # No context variables to pass to the template system, hence the
-        # blank dictionary object...
-        return render_to_response('login.html', {}, context)
+class LoginView(TemplateView):
+    template_name = "login.html"
 
-
-def index(request):
-    product = Product.objects.all().order_by('-created')
-    category = Category.objects.all().order_by('-created')
-    context1 =[]
-
-    for new in category:
-        productlist = Product.objects.filter(category=new)
-        if productlist:
-            list1 = list(productlist)
-            context1.append(list1)
-        else:
-            context1 = []
-
-    context = {'product': product, 'category':category,'productlist':context1}
-    return render(request,'index.html', context)
-
-@login_required
-def user_logout(request):
-    logout(request)
-    return HttpResponseRedirect('/')
-
-@login_required(login_url='/login/')
-def update(request, pk=None):
-    user = request.user
-
-    user_form = UserForm(instance=user)
-    customer = Customer.objects.filter(user = user)
-    vendor = Vendor.objects.filter(user = user)
-    updated = False
-
-    if customer:
-        profile_form = CustomerForm(instance=user.customer)
+    def post(self,request):
+        context = RequestContext(request)
 
         if request.method == 'POST':
-            user_form = UserForm(data=request.POST, instance=user)
-            profile_form = CustomerForm(data=request.POST, instance=user.customer)
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(username=username, password=password)
+            if user:
+                if user.is_active:
+                    login(request, user)
+                    customer = Customer.objects.filter(user = user)
+                    if customer:
+                        return HttpResponseRedirect('/')
+                    else:
+                        return HttpResponseRedirect('/dashboard')
+                else:
+                    return HttpResponse("Login Again")
+            else:
+                print("Invalid login details: {0}, {1}".format(username, password))
+                return HttpResponse("Invalid login details supplied.")
 
-            if user_form.is_valid() and profile_form.is_valid():
-                user = user_form.save()
-                user.set_password(user.password)
-                user.save()
-                profile = profile_form.save(commit=False)
-                profile.user = user
-                profile.save()
-                updated = True
+        else:
+            return render_to_response('login.html', {}, context)
 
-    else:
-        profile_form = VendorForm(instance=user.vendor)
+class IndexView(TemplateView):
+    def get(self, request):
+        product = Product.objects.all().order_by('-created')
+        category = Category.objects.all().order_by('-created')
+        context1 =[]
 
-        if request.method == 'POST':
-            user_form = UserForm(data=request.POST, instance=user)
-            profile_form = VendorForm(data=request.POST, instance=user.vendor)
+        for new in category:
+            productlist = Product.objects.filter(category=new)
+            if productlist:
+                list1 = list(productlist)
+                context1.append(list1)
+            else:
+                context1 = []
 
-            if user_form.is_valid() and profile_form.is_valid():
-                user = user_form.save()
-                user.set_password(user.password)
-                user.save()
-                profile = profile_form.save(commit=False)
-                profile.user = user
-                profile.save()
-                updated = True
+        context = {'product': product, 'category':category,'productlist':context1}
+        return render(request,'index.html', context)
 
-    context = {'user_form': user_form, 'profile_form': profile_form,'updated':updated}
-    return render(request, 'update.html', context)
+class LogoutView(LoginRequiredMixin,TemplateView):
+    login_url = '/login/'
+
+    def get(self,request):
+        logout(request)
+        return HttpResponseRedirect('/')
+
+class UpdateView(LoginRequiredMixin,TemplateView):
+    template_name = "update.html"
+    login_url = '/login/'
+
+    def get(self, request,pk):
+        user = request.user
+        user_form = UserForm(instance=user)
+        try:
+            customer = Customer.objects.filter(user = user)
+            profile_form = CustomerForm(instance=user.customer)
+        except:
+            customer = Vendor.objects.filter(user = user)
+            profile_form = VendorForm(instance=user.vendor)
+        context = {'user_form': user_form, 'profile_form': profile_form}
+        return render(request, 'update.html', context)
+
+    def post(self,request,pk):
+        user = request.user
+
+        user_form = UserForm(instance=user)
+        customer = Customer.objects.filter(user = user)
+        vendor = Vendor.objects.filter(user = user)
+        updated = False
+
+        if customer:
+            profile_form = CustomerForm(instance=user.customer)
+
+            if request.method == 'POST':
+                user_form = UserForm(data=request.POST, instance=user)
+                profile_form = CustomerForm(data=request.POST, instance=user.customer)
+
+                if user_form.is_valid() and profile_form.is_valid():
+                    user = user_form.save()
+                    user.set_password(user.password)
+                    user.save()
+                    profile = profile_form.save(commit=False)
+                    profile.user = user
+                    profile.save()
+                    updated = True
+
+        else:
+            profile_form = VendorForm(instance=user.vendor)
+
+            if request.method == 'POST':
+                user_form = UserForm(data=request.POST, instance=user)
+                profile_form = VendorForm(data=request.POST, instance=user.vendor)
+
+                if user_form.is_valid() and profile_form.is_valid():
+                    user = user_form.save()
+                    user.set_password(user.password)
+                    user.save()
+                    profile = profile_form.save(commit=False)
+                    profile.user = user
+                    profile.save()
+                    updated = True
+
+        context = {'user_form': user_form, 'profile_form': profile_form,'updated':updated}
+        return render(request, 'update.html', context)
+
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "dashboard.html"
@@ -234,6 +250,7 @@ class CategoryView(TemplateView):
         categories = Category.objects.all()
         context ={'category':category, 'product':product,'categories':categories}
         return render(request,'category.html',context)
+
 
 
 class AddProductView(LoginRequiredMixin,TemplateView):
@@ -337,6 +354,24 @@ class CartView(LoginRequiredMixin,TemplateView):
     def post(self,request):
             return HttpResponseRedirect('/checkout/')
 
+class CartItemDeleteView(TemplateView,LoginRequiredMixin):
+    template_name = 'cart.html'
+    login_url = '/login/'
+
+    def get(self, request,pk):
+        customer = Customer.objects.get(user=request.user)
+        prev_cart = customer.cart
+        product = Product.objects.get(id=pk)
+        if prev_cart:
+            for i, item in enumerate(prev_cart):
+                if prev_cart[i]['product']== product.id :
+                    del prev_cart[i]
+
+        customer.cart = prev_cart
+        customer.save()
+        return HttpResponseRedirect('/cart/')
+
+
 class CheckoutView(LoginRequiredMixin,TemplateView):
     template_name = 'checkout.html'
     login_url = '/login/'
@@ -353,17 +388,22 @@ class CheckoutView(LoginRequiredMixin,TemplateView):
     def post(self,request):
         order = Order(customer=request.user.customer)
         customer = Customer.objects.get(user = request.user)
-        order.save()
         cart_data = customer.cart
         total = 0
         for i, item in enumerate(cart_data):
-            orderitem = OrderItem(order = order)
-            orderitem.product = Product.objects.get(id=cart_data[i]['product'])
-            orderitem.quantity= cart_data[i]['quantity']
             total = cart_data[i]['price']+total
 
-        orderitem.price = total
-        orderitem.save()
+        order.total_price = total
+        order.save()
+
+        for i, item in enumerate(cart_data):
+            orderitem = OrderItem(order = order)
+            product = Product.objects.get(id=cart_data[i]['product'])
+            orderitem.product = product
+            orderitem.quantity= cart_data[i]['quantity']
+            orderitem.price = cart_data[i]['price']
+            orderitem.save()
+
         del request.session['cartcount']
         customer.cart =[]
         customer.save()

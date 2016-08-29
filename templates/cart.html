@@ -26,7 +26,7 @@
                     {% for new in cart_data %}
 
                         <tr>
-                            <td><a href="/product/{{ new.product }}">{{ new.product_name }}</a> </td>
+                            <td><a href="/product/{{ new.product }}">{{ new.product_name }}</a>  <a href="/deleteitem/{{ new.product }}">( Remove )</a> </td>
                             <td>{{ new.quantity }}</td>
                             <td>Rs.{{ new.price}}</td>
                         </tr>

@@ -75,9 +75,16 @@ class Product(TimeStamp):
 
 class Order(TimeStamp):
     customer = models.ForeignKey(Customer)
+    total_price = models.IntegerField(null=True,blank=True,default=0)
+
+    def __str__(self):
+        return "Order #%s" % ( self.id)
 
 class OrderItem(TimeStamp):
     order = models.ForeignKey(Order)
     product = models.ForeignKey(Product)
     quantity = models.IntegerField()
     price = models.IntegerField()
+
+    def __str__(self):
+        return "Order ID: %s , OrderProduct: %s" % (self.order.id,self.product)
